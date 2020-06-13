@@ -76,4 +76,44 @@ class RecipeController extends AbstractFOSRestController
             ]
         );
     }
+
+    /**
+    * @Put("/api/recipes/update/{id}",
+    * name="update_recipe",
+    * requirements={"id"="\d+"}
+    * )
+    * @View
+    * @ParamConverter("recipe", converter="fos_rest.request_body")
+    */
+    public function updateRecipe(Recipe $recipeToUpdate, Recipe $recipe, ConstraintViolationList $violations)
+    {
+        $em = $this->getDoctrine()->getManager();
+        
+        if (count($violations)) {
+            $message = "The JSON sent contains invalid data. Here are the errors you need to correct: ";
+            foreach ($violations as $violation) {
+                $message .= sprintf("Field %s: %s ", $violation->getPropertyPath(), $violation->getMessage());
+            }
+
+            throw new ResourceValidationException($message);
+        }
+
+        $recipeToUpdate->setTitle($recipe->getTitle());
+        $recipeToUpdate->setListOfIngredients($recipe->getListOfIngredients());
+        if ($recipe->getSubtitle()) {
+            $recipeToUpdate->setSubtitle($recipe->getSubtitle());
+        }
+        $em->flush();
+        if ($recipe->getDescription()) {
+            $recipeToUpdate->setDescription($recipe->getDescription());
+        }
+
+        return $this->view(
+            $recipe,
+            Response::HTTP_CREATED,
+            [
+                "Location" => $this->generateUrl("post_recipe", ["id" => $recipe->getId(), UrlGeneratorInterface::ABSOLUTE_URL])
+            ]
+        );
+    }
 }
