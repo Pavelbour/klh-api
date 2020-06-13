@@ -116,4 +116,21 @@ class RecipeController extends AbstractFOSRestController
             ]
         );
     }
+
+    /**
+    * @Delete("/api/recipes/delete/{id}",
+    * name="delete_recipe",
+    * requirements={"id"="\d+"}
+    * )
+    * @View
+    */
+    public function deleteRecipe(Recipe $recipe)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $em->remove($recipe);
+        $em->flush();
+
+        return $recipe;
+    }
 }
