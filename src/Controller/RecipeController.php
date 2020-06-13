@@ -45,4 +45,35 @@ class RecipeController extends AbstractFOSRestController
     {
         return $recipe;
     }
+
+    /**
+     * @Post("api/recipes/post",
+     * name="post_recipe"
+     * )
+     * @View(StatusCode=201)
+     * @ParamConverter("recipe", converter="fos_rest.request_body")
+     */
+    public function postRecipe(Recipe $recipe, ConstraintViolationList $violations)
+    {
+        if (count($violations)) {
+            $message = "The JSON sent contains invalid data. Here are the errors you need to correct: ";
+            foreach ($violations as $violation) {
+                $message .= sprintf("Field %s: %s ", $violation->getPropertyPath(), $violation->getMessage());
+            }
+
+            throw new ResourceValidationException($message);
+        }
+        
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($recipe);
+        $em->flush();
+
+        return $this->view(
+            $recipe,
+            Response::HTTP_CREATED,
+            [
+                "Location" => $this->generateUrl("post_recipe", ["id" => $recipe->getId(), UrlGeneratorInterface::ABSOLUTE_URL])
+            ]
+        );
+    }
 }
