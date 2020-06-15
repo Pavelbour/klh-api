@@ -1,0 +1,21 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+    <h2>Recipes API</h2>
+
+    <p>A simple REST API that allows to create, modify and delete cooking recipes.</p>
+
+    <h3>Endpoints.</h3>
+
+    <ul>
+        <li>/api/recipes Get the list of all the recipies.</li>
+        <li>/api/recipes/{id} Get the recipe with specified id.</li>
+        <li>/api/recipes/post Add a new recipe to the database.</li>
+        <li>/api/recipes/modify/{id} Modify the specified recipe.</li>
+        <li>/api/recipes/delete/{id} Delete the specified recipe.</li>
+    </ul>
+
+    <h3>Documentation.</h3>
+
+    <p>The complet documentation is at /api/doc</p>
+{% endblock %}

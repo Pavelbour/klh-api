@@ -11,6 +11,7 @@ use FOS\RestBundle\Controller\Annotations\Put;
 use FOS\RestBundle\Controller\Annotations\View;
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Swagger\Annotations as SWG;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -20,6 +21,13 @@ use Symfony\Component\Validator\ConstraintViolationList;
 class RecipeController extends AbstractFOSRestController
 {
     /**
+    * Get the list of all the recipies.
+    * 
+    * @SWG\Response(
+    * response=200,
+    * description="Get the list of all the recipies."
+    *)
+    *
     * @Get(path="/api/recipes",
     * name="show_recipes"
     * )
@@ -35,6 +43,17 @@ class RecipeController extends AbstractFOSRestController
     }
 
     /**
+    * Returns the recipe with specified id.
+    * 
+    * @SWG\Response(
+    *  response=200,
+    *  description="Returns the recipe with specified id."  
+    * )
+    *
+    * @SWG\Response(
+    *  response=400,
+    *  description="The recipe with specified id not found." 
+    * )
     * @Get("/api/recipes/{id}",
     * name="show_recipe",
     * requirements={"id"="\d+"}
@@ -47,6 +66,13 @@ class RecipeController extends AbstractFOSRestController
     }
 
     /**
+     * Add a new recipe to the database.
+     * 
+     * @SWG\Response(
+     *  response=201,
+     *  description="Add a new recipe to the database."
+     * )
+     * 
      * @Post("api/recipes/post",
      * name="post_recipe"
      * )
@@ -78,11 +104,23 @@ class RecipeController extends AbstractFOSRestController
     }
 
     /**
+    * Modify the specified recipe.
+    * 
+    * @SWG\Response(
+    *  response=200,
+    *  description="Modify the specified recipe."
+    *)
+    *
+    * @SWG\Response(
+    *  response=400,
+    *  description="The recipe with specified id not found."
+    *)
+    *
     * @Put("/api/recipes/update/{id}",
     * name="update_recipe",
     * requirements={"id"="\d+"}
     * )
-    * @View
+    *
     * @ParamConverter("recipe", converter="fos_rest.request_body")
     */
     public function updateRecipe(Recipe $recipeToUpdate, Recipe $recipe, ConstraintViolationList $violations)
@@ -118,6 +156,18 @@ class RecipeController extends AbstractFOSRestController
     }
 
     /**
+    * Delete the specified recipe.
+    * 
+    * @SWG\Response(
+    *  response=200,
+    *  description="Delete the specified recipe."
+    *)
+    *
+    * @SWG\Response(
+    *  response=400,
+    *  description="The recipe with specified id not found."
+    *)
+    *
     * @Delete("/api/recipes/delete/{id}",
     * name="delete_recipe",
     * requirements={"id"="\d+"}
